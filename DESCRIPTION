@@ -1,0 +1,19 @@
+Package: rfeb
+Title: Tools to extract and analyse basketball data from FEB leagues in Spain
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Sergio",
+           family = "Olmos-Pardo",
+           role = c("aut", "cre"),
+           email = "s.olmos.pardo@gmail.com")
+Description: What the package does (one paragraph).
+License: What license it uses
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    httr,
+    jsonlite,
+    ggplot2,
+    dplyr,
+    magrittr
+RoxygenNote: 6.1.1
