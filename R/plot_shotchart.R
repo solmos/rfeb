@@ -26,6 +26,7 @@ plot_shotchart <- function(df, ...) {
         geom_path(aes(x, y), size = 0.2, data = court$arc3) +
         coord_fixed() +
         theme_void() +
-        theme(panel.background = element_rect(fill = "whitesmoke"))
+        theme(panel.background = element_rect(fill = "whitesmoke"),
+              legend.position = "bottom")
     plt
 }

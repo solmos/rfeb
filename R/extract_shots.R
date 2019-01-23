@@ -58,7 +58,8 @@ extract_shots <- function(game_ids) {
     ## going through the middle of the baseline (750).
     ## 2 * 750 - x gives us the desired transformation.
     shots <- shots_raw %>%
-        dplyr::mutate(made = as.factor(as.numeric(m)),
+        dplyr::mutate(made = factor(as.numeric(m), levels = c(0, 1),
+                                    labels = c("Missed", "Made")),
                       x = 2 * 750 - 5.45 * as.numeric(x),
                       y = 5.45 * as.numeric(y),
                       quarter = as.factor(as.numeric(quarter)),
