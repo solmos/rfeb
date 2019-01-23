@@ -27,6 +27,7 @@ plot_shotchart <- function(df, ...) {
         coord_fixed() +
         theme_void() +
         theme(panel.background = element_rect(fill = "whitesmoke"),
-              legend.position = "bottom")
+              legend.position = "bottom") +
+        labs(color = "")
     plt
 }

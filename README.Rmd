@@ -25,7 +25,6 @@ library(ggplot2)
 game_ids <- 2010208:2010216
 shots <- extract_shots(game_ids)
 plot_shotchart(shots, color = made) +
-    facet_wrap(~game) +
-    labs(color = "")
+    facet_wrap(~game)
 ```
 
