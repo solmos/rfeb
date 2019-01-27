@@ -1,4 +1,3 @@
-
 #' Extract shot data for Spanish FEB basketball leagues
 #'
 #' @param game_ids Game IDs from Baloncesto en Vivo
@@ -14,15 +13,7 @@
 extract_shots <- function(game_ids) {
 
     # Scrape the data from Baloncesto en Vivo ====
-    base_api <- "http://baloncestoenvivo.feb.es/api/ShotChart/"
-    game_apis <- paste0(base_api, game_ids)
-    api_requests <- lapply(game_apis, httr::GET)
-    ### ADD WARNING FOR STATUS
-
-    json_list <- lapply(api_requests, httr::content, as = "text",
-                        encoding = "UTF-8")
-    data_list <- lapply(json_list, jsonlite::fromJSON)
-
+    data_list <- scrape_raw_list(game_ids)
 
     # Wrangle the data ====
     # We only want the shot data.
@@ -49,8 +40,8 @@ extract_shots <- function(game_ids) {
     ids_to_append <- rep(game_ids, rows_per_game)
 
     shots_raw <- do.call("rbind", shots_list)
-    shots_raw$game <- ids_to_append
-    shots_raw$team <- team_names_to_append
+    shots_raw$game_id <- ids_to_append
+    shots_raw$team_name <- team_names_to_append
 
     # Raw coordinates are in a different scale than court drawn.
     ## Trial and error gave me 5.45 a good transformation.
@@ -63,9 +54,17 @@ extract_shots <- function(game_ids) {
                       x = 2 * 750 - 5.45 * as.numeric(x),
                       y = 5.45 * as.numeric(y),
                       quarter = as.factor(as.numeric(quarter)),
-                      game = as.factor(game)) %>%
-        dplyr::select(-m)
+                      game_id = game_id,
+                      team_name = as.character(team_name),
+                      player_no = player) %>%
+        dplyr::select(-m, -player, -team)
 
-    shots
+    # We need to extract the stats from the raw data list
+    stats <- shooting_stats(data_list, game_ids)
+    final_shots <- dplyr::left_join(shots, stats,
+                                    by = c("game_id",
+                                           "player_no",
+                                           "team_name"))
+    final_shots
 }
 

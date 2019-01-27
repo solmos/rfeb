@@ -22,5 +22,5 @@ library(ggplot2)
 ids <- 2010208:2010216
 week17_2018 <- extract_shots(ids)
 plot_shotchart(week17_2018)
-plot_shotchart(week17_2018, color = made) + facet_wrap(~game)
+plot_shotchart(week17_2018, color = made) + facet_wrap(~game_id)
 }
