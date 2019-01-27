@@ -18,13 +18,18 @@ scrape_raw_list <- function(game_ids) {
     # Dealing with API request errors
     lapply(api_requests, httr::warn_for_status)
     errors <- unlist(lapply(api_requests, httr::http_error))
+    good_game_ids <- game_ids[!errors]
     if (sum(errors) > 0) {
-        cat("Request errors in game IDs: ", paste(game_ids))
+        cat("Request errors in game IDs: ", paste(good_game_ids))
     }
+
     good_requests <- api_requests[!errors]
 
     json_list <- lapply(good_requests, httr::content,
                         as = "text", encoding = "UTF-8")
     raw_list <- lapply(json_list, jsonlite::fromJSON)
+
+    attr(raw_list, "game_ids") <- good_game_ids
+
     raw_list
 }

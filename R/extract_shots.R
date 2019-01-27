@@ -14,6 +14,7 @@ extract_shots <- function(game_ids) {
 
     # Scrape the data from Baloncesto en Vivo ====
     data_list <- scrape_raw_list(game_ids)
+    good_game_ids <- attr(data_list, "game_ids")
 
     # Wrangle the data ====
     # We only want the shot data.
@@ -37,7 +38,7 @@ extract_shots <- function(game_ids) {
     # Create variable identifying the game before merging all elements/games of
     ## our list into one big data frame
     rows_per_game <- sapply(shots_list, nrow)
-    ids_to_append <- rep(game_ids, rows_per_game)
+    ids_to_append <- rep(good_game_ids, rows_per_game)
 
     shots_raw <- do.call("rbind", shots_list)
     shots_raw$game_id <- ids_to_append
