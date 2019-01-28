@@ -16,13 +16,17 @@ scrape_raw_list <- function(game_ids) {
     api_requests <- lapply(game_apis, httr::GET)
 
     # Dealing with API request errors
-    lapply(api_requests, httr::warn_for_status)
     errors <- unlist(lapply(api_requests, httr::http_error))
     good_game_ids <- game_ids[!errors]
-    if (sum(errors) > 0) {
-        cat("Request errors in game IDs: ", paste(good_game_ids))
+    bad_game_ids <- game_ids[errors]
+    error_message <- paste("request game ID", bad_game_ids)
+    # Why not working?
+    # mapply(httr::warn_for_status, api_requests, task = as.list(error_message))
+    bad_requests <- api_requests[errors]
+    n_errors <- length(bad_requests)
+    for (i in 1:n_errors) {
+        warn_for_status(bad_requests[[i]], task = error_message[i])
     }
-
     good_requests <- api_requests[!errors]
 
     json_list <- lapply(good_requests, httr::content,
