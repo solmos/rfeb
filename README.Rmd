@@ -8,7 +8,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # rfeb
 
-rfeb is a set of tools for scraping and analyzing basketball data from Spain's FEB leagues.
+rfeb provides a set of tools for scraping and analyzing basketball data from Spain's FEB leagues.
+
 
 ## Installation
 
@@ -17,7 +18,7 @@ rfeb is a set of tools for scraping and analyzing basketball data from Spain's F
 devtools::install_github("solmos/rfeb")
 ```
 
-## Example
+## Examples
 
 ```{r}
 library(rfeb)
@@ -25,6 +26,5 @@ library(ggplot2)
 game_ids <- 2010208:2010216
 shots <- extract_shots(game_ids)
 plot_shotchart(shots, color = made) +
-    facet_wrap(~game)
+    facet_wrap(~game_id)
 ```
-
