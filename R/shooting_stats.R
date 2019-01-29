@@ -6,17 +6,21 @@ shooting_stats <- function(raw_list, game_ids) {
     away_team_names <- lapply(raw_list, function(x) x$SHOTCHART$TEAM$name[2])
     away_team_ids <- lapply(raw_list, function(x) x$SHOTCHART$TEAM$id[2])
 
-    home_stats_dfs <- lapply(raw_list, function(x) x$SHOTCHART$TEAM$PLAYER[[1]])
-    away_stats_dfs <- lapply(raw_list, function(x) x$SHOTCHART$TEAM$PLAYER[[2]])
+    home_stats_dfs <- lapply(stats_dfs, function(x) x[[1]])
+    away_stats_dfs <- lapply(stats_dfs, function(x) x[[2]])
 
     home_stats_dfs <- Map(cbind, home_stats_dfs,
                           "team_name" = home_team_names,
                           "team_id" = home_team_ids,
-                          "game_id" = game_ids)
+                          "game_id" = game_ids,
+                          "home_team" = home_team_names,
+                          "away_team" = away_team_names)
     away_stats_dfs <- Map(cbind, away_stats_dfs,
                           "team_name" = away_team_names,
                           "team_id" = away_team_ids,
-                          "game_id" = game_ids)
+                          "game_id" = game_ids,
+                          "home_team" = home_team_names,
+                          "away_team" = away_team_names)
     home_stats <- do.call("rbind", home_stats_dfs)
     away_stats <- do.call("rbind", away_stats_dfs)
     stats <- rbind(home_stats, away_stats) %>%
@@ -35,7 +39,9 @@ shooting_stats <- function(raw_list, game_ids) {
                          points = as.numeric(pts),
                          team_name = as.character(team_name),
                          team_id = team_id,
-                         game_id = game_id)
+                         game_id = game_id,
+                         home_team = home_team,
+                         away_team = away_team)
     stats$p2_pct[is.nan(stats$p2_pct)] <- 0
     stats$p3_pct[is.nan(stats$p3_pct)] <- 0
     stats$fg_pct[is.nan(stats$fg_pct)] <- 0
